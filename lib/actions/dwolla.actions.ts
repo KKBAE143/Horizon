@@ -1,4 +1,4 @@
-"use strict";
+"use server";
 
 import { Client } from "dwolla-v2";
 
@@ -29,11 +29,11 @@ export const createFundingSource = async (
 ) => {
   try {
     return await dwollaClient
-    .post(`customers/${options.customerId}/funding-sources`, {
+      .post(`customers/${options.customerId}/funding-sources`, {
         name: options.fundingSourceName,
         plaidToken: options.plaidToken,
       })
-    .then((res) => res.headers.get("location"));
+      .then((res) => res.headers.get("location"));
   } catch (err) {
     console.error("Creating a Funding Source Failed: ", err);
   }
@@ -51,22 +51,15 @@ export const createOnDemandAuthorization = async () => {
   }
 };
 
-// Updated createDwollaCustomer function with state validation
 export const createDwollaCustomer = async (
   newCustomer: NewDwollaCustomerParams
 ) => {
   try {
-    // Validate the state field
-    if (!newCustomer.city ||!newCustomer.state || newCustomer.state.length!== 2) {
-      throw new Error('City or State is missing or State must be a 2-letter abbreviation.');
-    }
-
     return await dwollaClient
-    .post("customers", newCustomer)
-    .then((res) => res.headers.get("location"));
+      .post("customers", newCustomer)
+      .then((res) => res.headers.get("location"));
   } catch (err) {
     console.error("Creating a Dwolla Customer Failed: ", err);
-    throw err; // Rethrow the error so it can be caught and handled by the caller
   }
 };
 
@@ -91,8 +84,8 @@ export const createTransfer = async ({
       },
     };
     return await dwollaClient
-    .post("transfers", requestBody)
-    .then((res) => res.headers.get("location"));
+      .post("transfers", requestBody)
+      .then((res) => res.headers.get("location"));
   } catch (err) {
     console.error("Transfer fund failed: ", err);
   }
